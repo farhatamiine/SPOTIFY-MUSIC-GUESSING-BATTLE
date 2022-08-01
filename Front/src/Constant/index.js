@@ -1,0 +1,2 @@
+export const JOIN_GAME_MODAL = "JOIN_GAME_MODAL";
+export const HOST_GAME_MODAL = "HOST_GAME_MODAL";
