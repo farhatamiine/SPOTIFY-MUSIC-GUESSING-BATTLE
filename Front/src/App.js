@@ -1,43 +1,22 @@
-import React, { useState } from "react";
-import Modal from "./Components/Modal";
-import JoinGame from "./Components/JoinGame";
-import { HOST_GAME_MODAL, JOIN_GAME_MODAL } from "./Constant";
-import HostGame from "./Components/HostGame";
+import React, { useEffect, useState } from "react";
+import GamePage from "./Pages/GamePage";
+import HomePage from "./Pages/HomePage";
+import { Routes, Route, Link } from "react-router-dom";
+import io from "socket.io-client";
 
 function App() {
-  const [open, setOpen] = useState(false);
-  const [modalType, setModalType] = useState("");
+  const [socket, setSocket] = useState(null);
 
-  const openModal = (modalType) => {
-    setModalType(modalType);
-    setOpen(!open);
-  };
-
+  useEffect(() => {
+    const newSocket = io(`http://localhost:8080`);
+    setSocket(newSocket);
+    return () => newSocket.close();
+  }, [setSocket]);
   return (
-    <div className="flex flex-col h-full text-center items-center justify-center bg-gray-200 text-gray-700">
-      <div className="flex items-center">
-        <h1 className="text-4xl md:text-6xl font-thin uppercase tracking-wider">
-          Spotify Music Guessing Battle
-        </h1>
-      </div>
-      <div className="mt-10 flex justify-center mb-6">
-        <button
-          onClick={() => openModal(JOIN_GAME_MODAL)}
-          className="uppercase p-5 rounded-md hover:bg-[#1db954] hover:text-white"
-        >
-          Join a game
-        </button>
-        <button
-          onClick={() => openModal(HOST_GAME_MODAL)}
-          className="ml-10 uppercase p-5 rounded-md hover:text-white hover:bg-[#1db954]"
-        >
-          host a game
-        </button>
-      </div>
-      <Modal open={open} setOpen={setOpen}>
-        {modalType === JOIN_GAME_MODAL ? <JoinGame /> : <HostGame />}
-      </Modal>
-    </div>
+    <Routes>
+      <Route path="/" element={<HomePage socket={socket} />} />
+      <Route path="game" element={<GamePage socket={socket} />} />
+    </Routes>
   );
 }
 

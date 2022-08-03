@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { randomRoom } from "../Utilities";
+import { useNavigate } from "react-router-dom";
 
-function HostGame() {
+function HostGame({ socket }) {
   const [roomNumber, setRoomNumber] = useState();
+
   const [copied, setCopied] = useState(false);
+  const navigate = useNavigate();
 
   const redirectToGame = () => {
     //TODO: Redirect user to the game
     console.log("Hey user");
+    socket.on("connection", () => {
+      navigate("/game");
+    });
   };
 
   useEffect(() => {
